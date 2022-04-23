@@ -1,0 +1,75 @@
+import re
+seq_file = open(r"file_with_seq_data", 'rt')
+
+sequence = []
+c9orf72 = ""
+
+#read sequence within file into string
+for line in seq_file:
+    sequence.append(line.strip())
+print("sequence has been read")
+for item in sequence:
+    c9orf72 += item
+
+print(c9orf72)
+
+#detect number of "GGCCCC" patterns in a row within the uploaded sequence
+sequence1 = ".GCCCC"
+sequence2 = "G.CCCC"
+sequence3 = "GG.CCC"
+sequence4 = "GGC.CC"
+sequence5 = "GGCC.C"
+sequence6 = "GGCCC."
+sequence7 = ".GCCC"
+sequence8 = "G.CCC"
+sequence9 = "GG.CC"
+sequence10 = "GGC.C"
+sequence11 = "GGCC."
+sequence12 = ".GCC"
+sequence13 = "G.CC"
+sequence14 = "GG.C"
+sequence15 = "GGC."
+sequence16 = ".CCC"
+sequence17 = "G.CC"
+sequence18 = "GC.C"
+sequence19 = "GCC."
+sequence20 = ".CC"
+sequence21 = "G.C"
+sequence22 = "GC."
+
+pattern1 = f'(?:{sequence1})+'
+pattern2 = f'(?:{sequence2})+'
+pattern3 = f'(?:{sequence3})+'
+pattern4 = f'(?:{sequence4})+'
+pattern5 = f'(?:{sequence5})+'
+pattern6 = f'(?:{sequence6})+'
+pattern7 = f'(?:{sequence7})+'
+pattern8 = f'(?:{sequence8})+'
+pattern9 = f'(?:{sequence9})+'
+pattern10 = f'(?:{sequence10})+'
+pattern11 = f'(?:{sequence11})+'
+pattern12 = f'(?:{sequence12})+'
+pattern13 = f'(?:{sequence13})+'
+pattern14 = f'(?:{sequence14})+'
+pattern15 = f'(?:{sequence15})+'
+pattern16 = f'(?:{sequence16})+'
+pattern17 = f'(?:{sequence17})+'
+pattern18 = f'(?:{sequence18})+'
+pattern19 = f'(?:{sequence19})+'
+pattern20 = f'(?:{sequence20})+'
+pattern21 = f'(?:{sequence21})+'
+pattern22 = f'(?:{sequence22})+'
+
+findings = sorted(re.findall("|".join([pattern1, pattern2, pattern3, pattern4, pattern5, pattern6, pattern7, pattern8, pattern9, pattern10, pattern11, pattern12, pattern13, pattern14, pattern15, pattern16, pattern17, pattern18, pattern19, pattern20, pattern21, pattern22]), c9orf72), key=len)
+print(findings)
+longest_seq = len(findings[-1]) / len(sequence1)
+print(longest_seq)
+print(f'number of VNTRs: {longest_seq}')
+
+#classify patterns as potential increased risk or no indication of increased risk
+if longest_seq < 30:
+    print("No indication of increased risk for fALS based on c9orf72 hexanucleotide expansion.")
+elif longest_seq >= 30:
+    print("Potential indication of increased risk for fALS based on c9orf72 hexanucleotide expansion.")
+
+seq_file.close()

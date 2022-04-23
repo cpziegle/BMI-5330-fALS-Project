@@ -1,0 +1,35 @@
+import gzip
+import re
+import random
+seq_file = gzip.open(r"filename_with_sequence_data", 'rt')
+empty = open(r'file_for_export', 'wt')
+
+sequence = []
+nuc_string = ""
+
+#read sequence within file into string
+for line in seq_file:
+    sequence.append(line.strip())
+print("sequence has been read")
+for item in sequence:
+    #print("reading items")
+    nuc_string += item
+
+c9orf72 = nuc_string[27544543:]
+
+
+#detect number of "GGCCCC" patterns in a row within the uploaded sequence
+sequence_pattern = "GGCCCC"
+pattern = f'(?:{sequence_pattern})+'
+findings = sorted(re.findall(pattern, c9orf72), key=len)
+print(findings)
+longest_seq = len(findings[-1]) / len(sequence_pattern)
+print(f'number of VNTRs: {longest_seq}')
+
+neg_seq = ("GGCCCC" * random.randint(3,25))
+index = c9orf72.find(findings[-1])
+new_neg_seq = c9orf72[:index] + neg_seq + c9orf72[index:]
+print(neg_seq)
+empty.write(new_neg_seq)
+
+empty.close()
