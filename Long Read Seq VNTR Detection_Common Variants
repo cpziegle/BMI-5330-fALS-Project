@@ -1,0 +1,47 @@
+import gzip
+import re
+seq_file = open(r"file_with_seq_data", 'rt')
+
+sequence = []
+c9orf72 = ""
+
+#read sequence within file into string
+for line in seq_file:
+    sequence.append(line.strip())
+    #print(sequence)
+#print("sequence has been read")
+for item in sequence:
+    #print("reading items")
+    c9orf72 += item
+#print(nuc_string[27544543: 27575864])
+#c9orf72 = nuc_string[27544543:]
+print(c9orf72)
+
+#detect number of "GGCCCC" patterns in a row within the uploaded sequence
+sequence1 = "CCCCGG"
+sequence2 = "GGGCCC"
+sequence3 = "GGGCC"
+sequence4 = "GGGGC"
+sequence5 = "GGCC"
+sequence6 = "GGGC"
+
+
+pattern1 = f'(?:{sequence1})+'
+pattern2 = f'(?:{sequence2})+'
+pattern3 = f'(?:{sequence3})+'
+pattern4 = f'(?:{sequence4})+'
+pattern5 = f'(?:{sequence5})+'
+pattern6 = f'(?:{sequence6})+'
+
+
+findings = sorted(re.findall("|".join([pattern1, pattern2, pattern3, pattern4, pattern5, pattern6]), c9orf72), key=len)
+print(findings)
+longest_seq = len(findings[-1]) / len(sequence1)
+print(longest_seq)
+print(f'number of VNTRs: {longest_seq}')
+
+#classify patterns as potential increased risk or no indication of increased risk
+if longest_seq < 30:
+    print("No indication of increased risk for fALS based on c9orf72 hexanucleotide expansion.")
+elif longest_seq >= 30:
+    print("Potential indication of increased risk for fALS based on c9orf72 hexanucleotide expansion.")
